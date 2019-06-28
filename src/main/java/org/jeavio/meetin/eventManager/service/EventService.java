@@ -24,7 +24,7 @@ public interface EventService {
 
 	public List<EventDetails> getFutureEvents(String empId);
 
-	public boolean cancelEvent(String eventId);
+	public EventDetails cancelEvent(String eventId);
 
 	boolean existsById(String id);
 

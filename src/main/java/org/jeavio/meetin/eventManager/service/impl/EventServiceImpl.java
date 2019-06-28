@@ -100,11 +100,12 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public boolean cancelEvent(String id) {
+	public EventDetails cancelEvent(String id) {
 		if (!existsById(id))
-			return false;
+			return null;
+		EventDetails event = eventRepository.findEventById(id);
 		eventRepository.deleteById(id);
-		return true;
+		return event;
 	}
 
 	@Override

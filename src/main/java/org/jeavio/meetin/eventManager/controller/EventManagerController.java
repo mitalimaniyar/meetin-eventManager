@@ -54,8 +54,10 @@ public class EventManagerController {
 	}
 
 	@DeleteMapping("/api/events")
-	public boolean cancelEvent(@RequestBody Map<String, String> body) {
-		return eventService.cancelEvent(body.get("id"));
+	public EventDetails cancelEvent(@RequestBody Map<String, String> body) {
+		String id =body.get("id");
+		EventDetails canceledEvent = eventService.cancelEvent(id);
+		return canceledEvent;
 	}
 	
 	@PostMapping("/api/events")

@@ -26,4 +26,6 @@ public interface EventRepository extends MongoRepository<Event, String> {
 	@Query(value = "{$or:[{'members.empId': ?0 },{'organizer.empId': ?0 }],'start':{ '$gte' : ?1 } }", sort = "{'start':1}")
 	List<EventDetails> findFutureEvents(String empId, Date date);
 
+	EventDetails findEventById(String id);
+
 }
