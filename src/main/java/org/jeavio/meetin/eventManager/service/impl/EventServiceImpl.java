@@ -1,7 +1,5 @@
 package org.jeavio.meetin.eventManager.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,14 +21,14 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean addEvent(EventDTO newEvent) {
-		if(!checkSlotAvailability(newEvent.getRoomName(), newEvent.getStart(), newEvent.getEnd()))
+		if (!checkSlotAvailability(newEvent.getRoomName(), newEvent.getStart(), newEvent.getEnd()))
 			return false;
 		Event event = new Event(newEvent.getTitle(), newEvent.getAgenda(), newEvent.getRoomName(),
 				newEvent.getRoomSpecifications(), newEvent.getStart(), newEvent.getEnd(), newEvent.getOrganizer(),
 				newEvent.getMembers());
 		eventRepository.save(event);
 		return true;
-		
+
 	}
 
 	@Override
@@ -51,25 +49,6 @@ public class EventServiceImpl implements EventService {
 		}
 
 		return true;
-	}
-
-	@Override
-	public boolean checkSlotAvailability(String roomName, String start, String end) {
-		if (start == null || end == null)
-			return false;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		Date requestedStartDate = null;
-		Date requestedEndDate = null;
-		try {
-			requestedStartDate = format.parse(start);
-			requestedEndDate = format.parse(end);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		if (requestedStartDate == null || requestedEndDate == null)
-			return false;
-		else
-			return checkSlotAvailability(roomName, requestedStartDate, requestedEndDate);
 	}
 
 	@Override
@@ -116,6 +95,46 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Event findById(String id) {
 		return eventRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end) {
+		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
+		for (Event event : events) {
+			if (!event.getId().equals(eventId)) {
+				Date startDate = event.getStart();
+				Date endDate = event.getEnd();
+
+				boolean condition1 = (start.before(startDate) || start.equals(startDate))
+						&& (end.after(startDate) || end.equals(startDate));
+				boolean condition2 = (start.before(endDate) || start.equals(endDate))
+						&& (end.after(endDate) || end.equals(endDate));
+				boolean condition3 = (start.after(startDate) || start.equals(startDate))
+						&& (end.before(endDate) || end.equals(endDate));
+				if (condition1 || condition2 || condition3)
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean modifyEvent(EventDTO modifiedEvent) {
+		String eventId = modifiedEvent.getId();
+		if(!existsById(eventId) || !checkSlotAvailability(eventId,modifiedEvent.getRoomName(),modifiedEvent.getStart(),modifiedEvent.getEnd()))
+			return false;
+		Event event = findById(eventId);
+		event.setTitle(modifiedEvent.getTitle());
+		event.setAgenda(modifiedEvent.getAgenda());
+		event.setStart(modifiedEvent.getStart());
+		event.setEnd(modifiedEvent.getEnd());
+		event.setRoomName(modifiedEvent.getRoomName());
+		event.setRoomSpecifications(modifiedEvent.getRoomSpecifications());
+		event.setMembers(modifiedEvent.getMembers());
+		
+		eventRepository.save(event);
+		return true;
 	}
 
 }

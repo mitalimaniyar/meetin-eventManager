@@ -75,6 +75,7 @@ public class EventDetails {
 	public String getStart() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		return format.format(start);
+		
 	}
 
 	public void setStart(Date start) {

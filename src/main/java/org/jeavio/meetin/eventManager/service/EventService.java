@@ -14,8 +14,6 @@ public interface EventService {
 
 	public boolean checkSlotAvailability(String roomName, Date start, Date end);
 
-	public boolean checkSlotAvailability(String roomName, String start, String end);
-
 	public List<EventDetails> findEventByRoomName(String roomName);
 
 	public List<EventDetails> findEventByEmpId(String empId);
@@ -31,5 +29,9 @@ public interface EventService {
 	public Event findById(String id);
 
 	public Map<String, List<EventDetails>> getAllEventGroupByRoomName(List<String> roomNames);
+
+	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end);
+
+	public boolean modifyEvent(EventDTO modifiedEvent);
 	
 }
