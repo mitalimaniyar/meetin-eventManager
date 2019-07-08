@@ -23,13 +23,13 @@ public class EventManagerController {
 	@Autowired
 	EventService eventService;
 
-	@PostMapping("/api/events/all")
+	@PostMapping("/api/events/all") // GET /api/events
 	public Map<String, List<EventDetails>> getEventsByRooms(@RequestBody Map<String, List<String>> body) {
 		List<String> roomNames = body.get("roomNames");
 		return eventService.getAllEventGroupByRoomName(roomNames);
 	}
 
-	@PostMapping("/api/events/checkavailability")
+	@PostMapping("/api/events/checkavailability") // /api/events/available?start=&end=&roomName
 	public boolean checkSlotAvailability(@RequestBody EventDTO body) {
 		String roomName = body.getRoomName();
 		Date start = body.getStart();
@@ -39,7 +39,7 @@ public class EventManagerController {
 		return eventService.checkSlotAvailability(roomName, start, end);
 	}
 
-	@PostMapping("/api/events/checkavailability/modify")
+	@PostMapping("/api/events/checkavailability/modify")  // /api/events/available?start=&end=&roomName
 	public boolean checkModifiedSlotAvailability(@RequestBody EventDTO body) {
 		String id = body.getId();
 		String roomName = body.getRoomName();
@@ -50,19 +50,19 @@ public class EventManagerController {
 		return eventService.checkSlotAvailability(id, roomName, start, end);
 	}
 
-	@PostMapping("/api/events/room")
+	@PostMapping("/api/events/room") //  // /api/rooms/{roomId}/events
 	public List<EventDetails> getEventByRoomName(@RequestBody Map<String, String> body) {
 		String roomName = body.get("roomName");
 		return eventService.findEventByRoomName(roomName);
 	}
 
-	@PostMapping("/api/events/my")
+	@PostMapping("/api/events/my") // GET /api/events?empId=empId&type=all/past/future
 	public List<EventDetails> getUserEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.findEventByEmpId(empId);
 	}
 
-	@PostMapping("/api/events/my/past")
+	@PostMapping("/api/events/my/past") ///api/events/{empId}
 	public List<EventDetails> getUserPastEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.getPastEvents(empId);
@@ -86,12 +86,12 @@ public class EventManagerController {
 		return eventService.addEvent(newEvent);
 	}
 
-	@GetMapping("/api/events/exists/{eventId}")
+	@GetMapping("/api/events/exists/{eventId}") 
 	public boolean existEvent(@PathVariable(name = "eventId") String eventId) {
 		return eventService.existsById(eventId);
 	}
 
-	@GetMapping("/api/events/info/{eventId}")
+	@GetMapping("/api/events/info/{eventId}") // /api/events/{eventId}
 	public Event getEventById(@PathVariable(name = "eventId") String eventId) {
 		return eventService.findById(eventId);
 	}
