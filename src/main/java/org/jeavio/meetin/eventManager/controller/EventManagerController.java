@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jeavio.meetin.eventManager.dto.EventDTO;
-import org.jeavio.meetin.eventManager.dto.EventDetails;
 import org.jeavio.meetin.eventManager.model.Event;
 import org.jeavio.meetin.eventManager.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class EventManagerController {
 	EventService eventService;
 
 	@PostMapping("/api/events/all") // GET /api/events
-	public Map<String, List<EventDetails>> getEventsByRooms(@RequestBody Map<String, List<String>> body) {
+	public Map<String, List<EventDTO>> getEventsByRooms(@RequestBody Map<String, List<String>> body) {
 		List<String> roomNames = body.get("roomNames");
 		return eventService.getAllEventGroupByRoomName(roomNames);
 	}
@@ -51,33 +50,33 @@ public class EventManagerController {
 	}
 
 	@PostMapping("/api/events/room") //  // /api/rooms/{roomId}/events
-	public List<EventDetails> getEventByRoomName(@RequestBody Map<String, String> body) {
+	public List<Event> getEventByRoomName(@RequestBody Map<String, String> body) {
 		String roomName = body.get("roomName");
 		return eventService.findEventByRoomName(roomName);
 	}
 
 	@PostMapping("/api/events/my") // GET /api/events?empId=empId&type=all/past/future
-	public List<EventDetails> getUserEvents(@RequestBody Map<String, String> body) {
+	public List<EventDTO> getUserEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.findEventByEmpId(empId);
 	}
 
 	@PostMapping("/api/events/my/past") ///api/events/{empId}
-	public List<EventDetails> getUserPastEvents(@RequestBody Map<String, String> body) {
+	public List<EventDTO> getUserPastEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.getPastEvents(empId);
 	}
 
 	@PostMapping("/api/events/my/future")
-	public List<EventDetails> getUserFutureEvents(@RequestBody Map<String, String> body) {
+	public List<EventDTO> getUserFutureEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.getFutureEvents(empId);
 	}
 
 	@DeleteMapping("/api/events")
-	public EventDetails cancelEvent(@RequestBody Map<String, String> body) {
+	public EventDTO cancelEvent(@RequestBody Map<String, String> body) {
 		String id = body.get("id");
-		EventDetails canceledEvent = eventService.cancelEvent(id);
+		EventDTO canceledEvent = eventService.cancelEvent(id);
 		return canceledEvent;
 	}
 

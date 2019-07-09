@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.jeavio.meetin.eventManager.dao.EventRepository;
 import org.jeavio.meetin.eventManager.dto.EventDTO;
-import org.jeavio.meetin.eventManager.dto.EventDetails;
 import org.jeavio.meetin.eventManager.model.Event;
 import org.jeavio.meetin.eventManager.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,40 +51,41 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public List<EventDetails> findEventByRoomName(String roomName) {
-		return eventRepository.findAllByRoomName(roomName);
-	}
-
-	@Override
-	public List<EventDetails> findEventByEmpId(String empId) {
-		return eventRepository.findAllByEmpId(empId);
-	}
-
-	@Override
-	public Map<String, List<EventDetails>> getAllEventGroupByRoomName(List<String> roomNames) {
-		Map<String, List<EventDetails>> events = new LinkedHashMap<String, List<EventDetails>>();
-		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
+	public List<Event> findEventByRoomName(String roomName) {
+		List<Event> events = eventRepository.findAllByRoomName(roomName);
 		return events;
 	}
 
 	@Override
-	public List<EventDetails> getPastEvents(String empId) {
+	public List<EventDTO> findEventByEmpId(String empId) {
+		return eventRepository.findAllByEmpId(empId);
+	}
+
+	@Override
+	public Map<String, List<EventDTO>> getAllEventGroupByRoomName(List<String> roomNames) {
+		Map<String, List<EventDTO>> events = new LinkedHashMap<String, List<EventDTO>>();
+//		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
+		return events;
+	}
+
+	@Override
+	public List<EventDTO> getPastEvents(String empId) {
 		return eventRepository.findPastEvents(empId, new Date());
 	}
 
 	@Override
-	public List<EventDetails> getFutureEvents(String empId) {
+	public List<EventDTO> getFutureEvents(String empId) {
 		return eventRepository.findFutureEvents(empId, new Date());
 	}
 
 	@Override
-	public EventDetails cancelEvent(String id) {
+	public EventDTO cancelEvent(String id) {
 		if (!existsById(id))
 			return null;
-		EventDetails event = eventRepository.findEventById(id);
+		EventDTO event = eventRepository.findEventById(id);
 		eventRepository.deleteById(id);
 		return event;
-	}
+ 	}
 
 	@Override
 	public boolean existsById(String id) {
