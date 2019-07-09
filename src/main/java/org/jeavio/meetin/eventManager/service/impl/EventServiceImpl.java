@@ -32,8 +32,8 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean checkSlotAvailability(String roomName, Date start, Date end) {
-		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
-		for (Event event : events) {
+		List<EventDTO> events = eventRepository.findAllEventsByRoomName(roomName);
+		for (EventDTO event : events) {
 			Date startDate = event.getStart();
 			Date endDate = event.getEnd();
 
@@ -51,8 +51,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public List<Event> findEventByRoomName(String roomName) {
-		List<Event> events = eventRepository.findAllByRoomName(roomName);
+	public List<EventDTO> findEventByRoomName(String roomName) {
+		List<EventDTO> events = eventRepository.findAllByRoomName(roomName);
 		return events;
 	}
 
@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Map<String, List<EventDTO>> getAllEventGroupByRoomName(List<String> roomNames) {
 		Map<String, List<EventDTO>> events = new LinkedHashMap<String, List<EventDTO>>();
-//		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
+		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
 		return events;
 	}
 
@@ -99,8 +99,8 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end) {
-		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
-		for (Event event : events) {
+		List<EventDTO> events = eventRepository.findAllEventsByRoomName(roomName);
+		for (EventDTO event : events) {
 			if (!event.getId().equals(eventId)) {
 				Date startDate = event.getStart();
 				Date endDate = event.getEnd();

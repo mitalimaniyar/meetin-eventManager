@@ -13,7 +13,7 @@ public interface EventService {
 
 	public boolean checkSlotAvailability(String roomName, Date start, Date end);
 
-	public List<Event> findEventByRoomName(String roomName);
+	public List<EventDTO> findEventByRoomName(String roomName);
 
 	public List<EventDTO> findEventByEmpId(String empId);
 
