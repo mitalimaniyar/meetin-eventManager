@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jeavio.meetin.eventManager.dto.EventDTO;
-import org.jeavio.meetin.eventManager.dto.EventDetails;
 import org.jeavio.meetin.eventManager.model.Event;
 
 public interface EventService {
@@ -14,21 +13,21 @@ public interface EventService {
 
 	public boolean checkSlotAvailability(String roomName, Date start, Date end);
 
-	public List<EventDetails> findEventByRoomName(String roomName);
+	public List<Event> findEventByRoomName(String roomName);
 
-	public List<EventDetails> findEventByEmpId(String empId);
+	public List<EventDTO> findEventByEmpId(String empId);
 
-	public List<EventDetails> getPastEvents(String empId);
+	public List<EventDTO> getPastEvents(String empId);
 
-	public List<EventDetails> getFutureEvents(String empId);
+	public List<EventDTO> getFutureEvents(String empId);
 
-	public EventDetails cancelEvent(String eventId);
+	public EventDTO cancelEvent(String eventId);
 
 	boolean existsById(String id);
 
 	public Event findById(String id);
 
-	public Map<String, List<EventDetails>> getAllEventGroupByRoomName(List<String> roomNames);
+	public Map<String, List<EventDTO>> getAllEventGroupByRoomName(List<String> roomNames);
 
 	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end);
 
