@@ -106,8 +106,8 @@ public class EventServiceImpl implements EventService {
 				Date endDate = event.getEnd();
 
 				boolean condition1 = (start.before(startDate) || start.equals(startDate))
-						&& (end.after(startDate) || end.equals(startDate));
-				boolean condition2 = (start.before(endDate) || start.equals(endDate))
+						&& (end.after(startDate));
+				boolean condition2 = (start.before(endDate))
 						&& (end.after(endDate) || end.equals(endDate));
 				boolean condition3 = (start.after(startDate) || start.equals(startDate))
 						&& (end.before(endDate) || end.equals(endDate));
