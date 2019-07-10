@@ -20,10 +20,17 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean addEvent(EventDTO newEvent) {
-		if (!checkSlotAvailability(newEvent.getRoomName(), newEvent.getStart(), newEvent.getEnd()))
+		String roomName = newEvent.getRoomName();
+		Date start = newEvent.getStart();
+		Date end = newEvent.getEnd();
+		if (roomName == null || start == null || end == null)
 			return false;
-		Event event = new Event(newEvent.getTitle(), newEvent.getAgenda(), newEvent.getRoomName(),
-				newEvent.getRoomSpecifications(), newEvent.getStart(), newEvent.getEnd(), newEvent.getOrganizer(),
+		if (start.after(end))
+			return false;
+		if (!checkSlotAvailability(roomName,start,end))
+			return false;
+		Event event = new Event(newEvent.getTitle(), newEvent.getAgenda(), roomName,
+				newEvent.getRoomSpecifications(), start, end, newEvent.getOrganizer(),
 				newEvent.getMembers());
 		eventRepository.save(event);
 		return true;
@@ -32,6 +39,8 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean checkSlotAvailability(String roomName, Date start, Date end) {
+		if(start.after(end))
+			return false;
 		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
 		for (Event event : events) {
 			Date startDate = event.getStart();
@@ -99,12 +108,14 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end) {
+		if(start.after(end))
+			return false;
 		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
 		for (Event event : events) {
 			if (!event.getId().equals(eventId)) {
 				Date startDate = event.getStart();
 				Date endDate = event.getEnd();
-
+				
 				boolean condition1 = (start.before(startDate) || start.equals(startDate))
 						&& (end.after(startDate) || end.equals(startDate));
 				boolean condition2 = (start.before(endDate) || start.equals(endDate))
@@ -122,14 +133,21 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public boolean modifyEvent(EventDTO modifiedEvent) {
 		String eventId = modifiedEvent.getId();
+		String roomName = modifiedEvent.getRoomName();
+		Date start = modifiedEvent.getStart();
+		Date end = modifiedEvent.getEnd();
+		if (eventId==null || roomName == null || start == null || end == null)
+			return false;
+		if (start.after(end))
+			return false;
 		if(!existsById(eventId) || !checkSlotAvailability(eventId,modifiedEvent.getRoomName(),modifiedEvent.getStart(),modifiedEvent.getEnd()))
 			return false;
 		Event event = findById(eventId);
 		event.setTitle(modifiedEvent.getTitle());
 		event.setAgenda(modifiedEvent.getAgenda());
-		event.setStart(modifiedEvent.getStart());
-		event.setEnd(modifiedEvent.getEnd());
-		event.setRoomName(modifiedEvent.getRoomName());
+		event.setStart(start);
+		event.setEnd(end);
+		event.setRoomName(roomName);
 		event.setRoomSpecifications(modifiedEvent.getRoomSpecifications());
 		event.setMembers(modifiedEvent.getMembers());
 		

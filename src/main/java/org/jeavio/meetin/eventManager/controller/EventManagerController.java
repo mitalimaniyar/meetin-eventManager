@@ -33,23 +33,27 @@ public class EventManagerController {
 		String roomName = body.getRoomName();
 		Date start = body.getStart();
 		Date end = body.getEnd();
-		if(roomName==null || start==null || end==null)
+		if (roomName == null || start == null || end == null)
+			return false;
+		if (start.after(end))
 			return false;
 		return eventService.checkSlotAvailability(roomName, start, end);
 	}
 
-	@PostMapping("/api/events/checkavailability/modify")  // /api/events/available?start=&end=&roomName
+	@PostMapping("/api/events/checkavailability/modify") // /api/events/available?start=&end=&roomName
 	public boolean checkModifiedSlotAvailability(@RequestBody EventDTO body) {
 		String id = body.getId();
 		String roomName = body.getRoomName();
 		Date start = body.getStart();
 		Date end = body.getEnd();
-		if(id==null || roomName==null || start==null || end==null)
+		if (id == null || roomName == null || start == null || end == null)
+			return false;
+		if (start.after(end))
 			return false;
 		return eventService.checkSlotAvailability(id, roomName, start, end);
 	}
 
-	@PostMapping("/api/events/room") //  // /api/rooms/{roomId}/events
+	@PostMapping("/api/events/room") // // /api/rooms/{roomId}/events
 	public List<Event> getEventByRoomName(@RequestBody Map<String, String> body) {
 		String roomName = body.get("roomName");
 		return eventService.findEventByRoomName(roomName);
@@ -61,7 +65,7 @@ public class EventManagerController {
 		return eventService.findEventByEmpId(empId);
 	}
 
-	@PostMapping("/api/events/my/past") ///api/events/{empId}
+	@PostMapping("/api/events/my/past") /// api/events/{empId}
 	public List<EventDTO> getUserPastEvents(@RequestBody Map<String, String> body) {
 		String empId = body.get("empId");
 		return eventService.getPastEvents(empId);
@@ -82,10 +86,17 @@ public class EventManagerController {
 
 	@PostMapping("/api/events")
 	public boolean addEvent(@RequestBody EventDTO newEvent) {
+		String roomName = newEvent.getRoomName();
+		Date start = newEvent.getStart();
+		Date end = newEvent.getEnd();
+		if (roomName == null || start == null || end == null)
+			return false;
+		if (start.after(end))
+			return false;
 		return eventService.addEvent(newEvent);
 	}
 
-	@GetMapping("/api/events/exists/{eventId}") 
+	@GetMapping("/api/events/exists/{eventId}")
 	public boolean existEvent(@PathVariable(name = "eventId") String eventId) {
 		return eventService.existsById(eventId);
 	}
@@ -97,6 +108,13 @@ public class EventManagerController {
 
 	@PutMapping("/api/events")
 	public boolean modifyEvent(@RequestBody EventDTO modifiedEvent) {
+		String roomName = modifiedEvent.getRoomName();
+		Date start = modifiedEvent.getStart();
+		Date end = modifiedEvent.getEnd();
+		if (roomName == null || start == null || end == null)
+			return false;
+		if (start.after(end))
+			return false;
 		return eventService.modifyEvent(modifiedEvent);
 	}
 }
