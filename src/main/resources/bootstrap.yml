@@ -14,4 +14,4 @@ server:
   
 logging:
   level: 
-    org.jeavio.meetin.eventManager: DEBUG
+    org.jeavio.meetin.eventManager: INFO

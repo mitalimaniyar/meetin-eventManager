@@ -53,8 +53,8 @@ public class EventManagerController {
 		return eventService.checkSlotAvailability(id, roomName, start, end);
 	}
 
-	@PostMapping("/api/events/room") // // /api/rooms/{roomId}/events
-	public List<Event> getEventByRoomName(@RequestBody Map<String, String> body) {
+	@PostMapping("/api/events/room") //  // /api/rooms/{roomId}/events
+	public List<EventDTO> getEventByRoomName(@RequestBody Map<String, String> body) {
 		String roomName = body.get("roomName");
 		return eventService.findEventByRoomName(roomName);
 	}

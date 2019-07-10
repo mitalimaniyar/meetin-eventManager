@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 public interface EventRepository extends MongoRepository<Event, String> {
 
 	@Query(sort = "{'start':1}")
-	List<Event> findAllByRoomName(String roomName);
+	List<EventDTO> findAllByRoomName(String roomName);
 
-	List<Event> findAllEventsByRoomName(String roomName);
+	List<EventDTO> findAllEventsByRoomName(String roomName);
 	
 	@Query(value = "{$or:[{'members.empId': ?0 },{'organizer.empId': ?0 }]}", sort = "{'start':1}")
 	List<EventDTO> findAllByEmpId(String empId);

@@ -41,8 +41,8 @@ public class EventServiceImpl implements EventService {
 	public boolean checkSlotAvailability(String roomName, Date start, Date end) {
 		if(start.after(end))
 			return false;
-		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
-		for (Event event : events) {
+		List<EventDTO> events = eventRepository.findAllEventsByRoomName(roomName);
+		for (EventDTO event : events) {
 			Date startDate = event.getStart();
 			Date endDate = event.getEnd();
 
@@ -60,8 +60,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public List<Event> findEventByRoomName(String roomName) {
-		List<Event> events = eventRepository.findAllByRoomName(roomName);
+	public List<EventDTO> findEventByRoomName(String roomName) {
+		List<EventDTO> events = eventRepository.findAllByRoomName(roomName);
 		return events;
 	}
 
@@ -73,7 +73,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Map<String, List<EventDTO>> getAllEventGroupByRoomName(List<String> roomNames) {
 		Map<String, List<EventDTO>> events = new LinkedHashMap<String, List<EventDTO>>();
-//		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
+		roomNames.forEach(roomName -> events.put(roomName, findEventByRoomName(roomName)));
 		return events;
 	}
 
@@ -108,17 +108,19 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public boolean checkSlotAvailability(String eventId, String roomName, Date start, Date end) {
+
 		if(start.after(end))
 			return false;
-		List<Event> events = eventRepository.findAllEventsByRoomName(roomName);
-		for (Event event : events) {
+		List<EventDTO> events = eventRepository.findAllEventsByRoomName(roomName);
+		for (EventDTO event : events) {
+
 			if (!event.getId().equals(eventId)) {
 				Date startDate = event.getStart();
 				Date endDate = event.getEnd();
 				
 				boolean condition1 = (start.before(startDate) || start.equals(startDate))
-						&& (end.after(startDate) || end.equals(startDate));
-				boolean condition2 = (start.before(endDate) || start.equals(endDate))
+						&& (end.after(startDate));
+				boolean condition2 = (start.before(endDate))
 						&& (end.after(endDate) || end.equals(endDate));
 				boolean condition3 = (start.after(startDate) || start.equals(startDate))
 						&& (end.before(endDate) || end.equals(endDate));
